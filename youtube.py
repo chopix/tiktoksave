@@ -22,7 +22,7 @@ async def hello(client: Client, message: Message):
 
     try:
         if YouTube(url).length < 3600:
-            file = requests.get(YouTube(url=url).streams.get_highest_resolution().url).content
+            file = requests.get(YouTube(url=url).streams.url).content
             print('got file')
         else:
             await app.send_message(f'{bot_chat_id}', f'FILESIZE {caption}')
@@ -36,7 +36,7 @@ async def hello(client: Client, message: Message):
 
         a = open(fr'vid/{name}.mp4', 'rb')
         print('open')
-        await app.send_video(f'{bot_chat_id}', a, caption=caption, width=464, height=261)
+        await app.send_video(f'{bot_chat_id}', a, caption=caption, width=1080, height=1920)
         print('sended')
         a.close()
 

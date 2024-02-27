@@ -6,7 +6,7 @@ import requests
 from pytube import YouTube
 
 
-TOKEN = '7161096362:AAFU6w1h5wje-0E15d1snLtPxBUSO8-6sHY'
+TOKEN = '6674740478:AAEYHq6TTGmjfUpHqOmO1Yuxcgja89cJVOY'
 bot = telebot.TeleBot(TOKEN)
 
 
@@ -29,8 +29,11 @@ def send_video(message):
             bot.delete_message(message.from_user.id, m.message_id)
 
         elif 'reel' in message.text:
-            m = bot.send_message(message.from_user.id, '⬇️ Рилс загружается на сервер, подождите немного')
-            bot.send_video(message.from_user.id, get_reel(message.text), timeout=200, caption=f'скачано с @{bot.get_me().username}', width=243, height=432)
+            reel = get_reel(message.text)
+            # '⬇️ Рилс загружается на сервер, подождите немного'
+            m = bot.send_message(message.from_user.id, reel)
+
+            bot.send_video(message.from_user.id, reel, timeout=200, caption=f'скачано с @{bot.get_me().username}', width=243, height=432)
             bot.delete_message(message.from_user.id, m.message_id)
 
         elif 'stories' in message.text:
@@ -82,12 +85,15 @@ def send_video(message):
 
         elif 'shorts' in message.text:
             m = bot.send_message(message.from_user.id, '⬇️ Видео загружается на сервер, подождите немного')
-            bot.send_video(message.from_user.id, requests.get(YouTube(url=message.text).streams.get_highest_resolution().url).content, timeout=200, caption=f'скачано с @{bot.get_me().username}', width=243, height=432)
+            bot.send_video(message.from_user.id, requests.get(YouTube(url=message.text).streams.get_highest_resolution().url).content, timeout=200, caption=f'скачано с @{bot.get_me().username}', width=1080, height=1920)
             bot.delete_message(message.from_user.id, m.message_id)
 
         elif 'youtu' in message.text:
             m = bot.send_message(message.from_user.id, '⬇️ Видео загружается на сервер, подождите немного')
-
+            bot.send_video(message.from_user.id,
+                           requests.get(YouTube(url=message.text).streams.get_highest_resolution().url).content,
+                           timeout=200, caption=f'скачано с @{bot.get_me().username}', width=1920, height=1080)
+            bot.delete_message(message.from_user.id, m.message_id)
             connection = sqlite3.connect('my_database.db')
             cursor = connection.cursor()
 
@@ -97,7 +103,7 @@ def send_video(message):
             connection.commit()
             connection.close()
 
-            bot.send_message(7192675375, f'{message.text} {m.message_id}')
+            # bot.send_message(7192675375, f'{message.text} {m.message_id}')
 
         else:
             bot.send_message(message.from_user.id, '⬇️ Введите корректный URL')
